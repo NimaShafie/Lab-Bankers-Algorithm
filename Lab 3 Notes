@@ -1,0 +1,73 @@
+Bankers algorithm was created to avoid deadlocks
+was originally created for a banking system, to make sure it never allocated more cash than it had at one time
+
+
+Available: vector (1D array) if [j] = k that means there are k resource tpyes of r[j] available
+how many current resources are available
+looking at algorithm you are taking a snapshot of the system at a certain time t=0, how many processes/resources are available
+
+max: (2d array) n * m matrix, max defines the maximum demand of each process (the total number of resources the process needs to complete its task)
+
+allocation: defines the # of each type of resource that is currently allocated to a process
+how many resources are allocated at a given time to a process
+
+need: calculated by max - allocation
+what does the process need to finish its task
+
+for vectors
+when comparing these arrays, is the need <= how many resources there are in the system
+compare all elements of the array
+
+
+bankers algorithm is composed of two seperate algoirthms
+1. safety algorithm - used to determine if the system is in a safe state
+n = # of processes	m = # of resource types
+
+define 2 vectors: work (# of resources available), finish (corresponding to particular process, initalize as false, it only becomes true when process has used all the processes it needs)
+
+iterate through these steps and if everything is fine, then you have a safe space
+
+page 32 on ch08.pptx
+with the addition of professors own notes
+
+max will be prompted for each process & each resource within the process
+5 processes 3 resources = 15 total entries at the beginnning
+
+5 processes (p[0]] - p[4])
+3 resource types (A B C)
+system starts with resoruce instances
+R1 = 10, R2 = 5, R3 = 7 (ABC)
+this table is just a snapshot (not the whole system at the end)
+
+for each resource, we have what is allocated to the process (Allocation column) 0A, 0B, 0C = 0, 1, 0
+Max for P0 is finally going to 0A, 0B, 0C = 7, 5, 3
+Avaible for P0 is going to be 0A, 0B, 0C = 3, 3, 2	(this is the amount that is currently used by the process at this moment in time)
+max - allocation = need
+Need table is what you need
+
+
+
+Safety Algorithm: 
+
+P0:
+Need 	  = 7, 4, 3	(A,B,C)
+Available = 3, 3, 2	(A,B,C) what is currently available
+is the need <= availble? no, this is now false, and we move on
+7 > 3 already makes this false
+
+P1:
+Need 	   = 1, 2, 2	
+Available  = 3, 3, 2
+Allocation = 2, 0, 0
+(need <= available) is true
+P1 got what it needed, now we adjust the availability of the system
+take the original avaiablility, and add the allocation
+Available = Available + allocation = 3,3,2 + 2,0,0 = 5,3,2 (new available) when the process is finished, it gives up its resources
+set finish flag for P1 to done or 1
+when all finish flags are == 1 we are done
+
+continue this process for all processes
+once we finish all processes we go back and recheck with our new availability amount
+
+safe sequence = the following processes that were marked done in order
+= P1, P3, P4, P0, P2
