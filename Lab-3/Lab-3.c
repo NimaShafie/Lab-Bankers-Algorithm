@@ -33,20 +33,17 @@ struct TableType {
 	int turnaround_time;
 } *process = NULL;
 typedef struct TableType table_typedef;	// pcb = struct Node
-/*
+/* 
+
 /*
 there will be two vectors:
-Resource vector: an m-element vector, where m is the number of resources and each entry
-resource[j] records the total number of units of resource j.
-Available vector: an m-element vector, where m is the number of resources and each entry
-available[j] records the number of units of resource j that are available.
+Resource vector: an m-element vector, where m is the number of resources and each entry resource[j] records the total number of units of resource j.
+Available vector: an m-element vector, where m is the number of resources and each entryavailable[j] records the number of units of resource j that are available.
+
 there will be three arrays:
-Max claims array: an nxm-element array, where m is the number of resources and n is the number of processes
-and each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
-Allocation array: an nxm-element array, where m is the number of resources and n is the number of processes
-and each entry allocation[i][j] contains an integer that records the number of units of resource j that process i has actually been allocated.
-Need array: an nxm array, where m is the number of resources and n is the number of processes
-and each entry need[i][j] contains an integer that records the number of units of resource j that process i may need in the future.
+Max claims array: an nxm-element array, where m is the number of resources and n is the number of processes and each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
+Allocation array: an nxm-element array, where m is the number of resources and n is the number of processes and each entry allocation[i][j] contains an integer that records the number of units of resource j that process i has actually been allocated.
+Need array: an nxm array, where m is the number of resources and n is the number of processes and each entry need[i][j] contains an integer that records the number of units of resource j that process i may need in the future.
 */
 
 
