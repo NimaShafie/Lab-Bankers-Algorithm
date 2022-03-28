@@ -37,19 +37,53 @@ typedef struct TableType table_typedef;	// pcb = struct Node
 
 /*
 there will be two vectors:
-Resource vector: an m-element vector, where m is the number of resources and each entry resource[j] records the total number of units of resource j.
-Available vector: an m-element vector, where m is the number of resources and each entryavailable[j] records the number of units of resource j that are available.
+Resource vector: an m-element vector, where m is the number of resources and each entry resource[j]
+records the total number of units of resource j.
+
+Available vector: an m-element vector, where m is the number of resources and each entryavailable[j]
+records the number of units of resource j that are available.
+
+n x m meaning, n by m, which equals n * m total elements
+rows x columns
+so if n = 3, m = 1
+3 x 1 ==
+x
+x
+x
+3 total elements
+
+if (a=2) x (b=4)
+a b b b
+a b b b
+8 total elements
 
 there will be three arrays:
-Max claims array: an nxm-element array, where m is the number of resources and n is the number of processes and each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
-Allocation array: an nxm-element array, where m is the number of resources and n is the number of processes and each entry allocation[i][j] contains an integer that records the number of units of resource j that process i has actually been allocated.
-Need array: an nxm array, where m is the number of resources and n is the number of processes and each entry need[i][j] contains an integer that records the number of units of resource j that process i may need in the future.
+Max claims array: an n x m-element array, where m is the number of resources and n is the number of processes
+each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
+n m m m
+n m m m
+2 x 4 array (or n = 2, m = 4)
+in the following, to access the j'th element, we use maxClaim[i = 1][j = 1]
+n m m m
+n j m m
+
+Allocation array: an n x m-element array, where m is the number of resources and n is the number of processes
+each entry allocation[i][j] contains an integer that records the number of units of resource j that process i has actually been allocated.
+
+
+Need array: an n x m array, where m is the number of resources and n is the number of processes
+each entry need[i][j] contains an integer that records the number of units of resource j that process i may need in the future.
 */
 
 
+
 /***********************************************************/
+// this will be called at the end of option 1 (first)
 void PrintResource() {
 	/* declare local variables */
+
+    printf("\nResource\t\tUnits\t\tAvailable\n");
+    printf("------------------------------------------------\n");
 
 	/* for loop: print each resource index */
 
@@ -59,6 +93,7 @@ void PrintResource() {
 
 
 /***************************************************************/
+// this will be called at the end of option 1 (second)
 void PrintMatrix() {
 	/* declare local variables */
 
@@ -99,8 +134,11 @@ void EnterParameters() {
 	}
 
 	/* for each process, for each resource, prompt for maximum number of units requested by process, update max_claim and need arrays */
+
 	/* for each process, for each resource, prompt for number of resource units allocated to process */
+
 	/* print resource vector, available vector, max_claim array, allocated array, need array */
+    
 	return;
 }
 
