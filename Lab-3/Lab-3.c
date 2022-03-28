@@ -13,12 +13,26 @@ Nima Shafie
 int MAX_PROCS;
 int MAX_RESOURCES = 1;
 
+/*
 typedef struct dynamic_array
 {
 	int* data;
 	int capacity; // total capacity
 	int size; // number of elements in vector
 } vector;
+*/
+
+struct vectorType {
+    int resource;
+    int available;
+} *vector = NULL;
+typedef struct vectorType type_vector;
+
+struct arrayType {
+    int resource;
+    int process;
+} *array = NULL;
+typedef struct arrayType type_array;
 
 /*
 struct TableType {
@@ -37,16 +51,16 @@ typedef struct TableType table_typedef;	// pcb = struct Node
 
 /*
 there will be two vectors:
-Resource vector: an m-element vector, where m is the number of resources and each entry resource[j]
-records the total number of units of resource j.
 
-Available vector: an m-element vector, where m is the number of resources and each entryavailable[j]
+resource[j]     where j is the size of m
+Resource vector: an m-element vector, where m is the number of resources and each entry resource[j] records the total number of units of resource j.
+
+available[j]     where j is the size of m
+Available vector: an m-element vector, where m is the number of resources and each entry available[j]
 records the number of units of resource j that are available.
 
-n x m meaning, n by m, which equals n * m total elements
-rows x columns
-so if n = 3, m = 1
-3 x 1 ==
+n x m meaning, n by m, which equals n * m total elements,   rows x columns
+so if n = 3, m = 1,     3 x 1 ==
 x
 x
 x
@@ -57,9 +71,6 @@ a b b b
 a b b b
 8 total elements
 
-there will be three arrays:
-Max claims array: an n x m-element array, where m is the number of resources and n is the number of processes
-each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
 n m m m
 n m m m
 2 x 4 array (or n = 2, m = 4)
@@ -67,10 +78,17 @@ in the following, to access the j'th element, we use maxClaim[i = 1][j = 1]
 n m m m
 n j m m
 
+all arrays will be 2d arrays, array[i][j]
+there will be three arrays:
+max_claim[i][j]     where i is the size of n, and j is the size of m
+Max claims array: an n x m-element array, where m is the number of resources and n is the number of processes
+each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
+
+allocation[i][j]     where i is the size of n, and j is the size of m
 Allocation array: an n x m-element array, where m is the number of resources and n is the number of processes
 each entry allocation[i][j] contains an integer that records the number of units of resource j that process i has actually been allocated.
 
-
+need[i][j]     where i is the size of n, and j is the size of m
 Need array: an n x m array, where m is the number of resources and n is the number of processes
 each entry need[i][j] contains an integer that records the number of units of resource j that process i may need in the future.
 */
@@ -124,7 +142,22 @@ void EnterParameters() {
 	} while (MAX_RESOURCES <= 0);
 
 
+    // vectors = resource + available
+    // 2d arrays = max_claim, allocated, need
 	/* allocate memory for vectors and arrays: resource, available, max_claim, allocated, need */
+    vector = (type_vector*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(vector));        // trying to see if we can just use two of these
+    array = (type_vector*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+
+    // typedef struct vectorType type_vector;	// pcb = struct Node
+    // vector --> *process = NULL;
+    // tableType = typeVec
+    /*
+    process = (table_typedef*)malloc(MAX_PROCS * sizeof(process)); // Memory is allocated for 'n' elements 
+	if (process == NULL) {
+		printf("\nNo memory is allocated.\n\n");
+		exit(0);
+	}
+    */
 
 
 	/* for each resource, prompt for number of units, set resource and available vectors indices*/
@@ -138,7 +171,7 @@ void EnterParameters() {
 	/* for each process, for each resource, prompt for number of resource units allocated to process */
 
 	/* print resource vector, available vector, max_claim array, allocated array, need array */
-    
+
 	return;
 }
 
