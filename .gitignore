@@ -61,3 +61,5 @@ dkms.conf
 /Lab-3/.vs/Lab-3/v17/Browse.VC.db
 /Lab-3/.vs/Lab-3/v17
 /Lab-3/x64/Debug
+.vscode/
+*.vscode/
