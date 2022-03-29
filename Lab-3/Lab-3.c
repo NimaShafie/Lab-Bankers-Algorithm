@@ -53,11 +53,12 @@ typedef struct TableType table_typedef;	// pcb = struct Node
 there will be two vectors:
 
 resource[j]     where j is the size of m
-Resource vector: an m-element vector, where m is the number of resources and each entry resource[j] records the total number of units of resource j.
+Resource vector: an m-element vector, where m is the number of resources and each entry resource[j
+records the total number of units of resource j.
 
 available[j]     where j is the size of m
-Available vector: an m-element vector, where m is the number of resources and each entry available[j]
-records the number of units of resource j that are available.
+Available vector: an m-element vector, where m is the number of resources and each entry
+available[j] records the number of units of resource j that are available.
 
 n x m meaning, n by m, which equals n * m total elements,   rows x columns
 so if n = 3, m = 1,     3 x 1 ==
@@ -81,16 +82,19 @@ n j m m
 all arrays will be 2d arrays, array[i][j]
 there will be three arrays:
 max_claim[i][j]     where i is the size of n, and j is the size of m
-Max claims array: an n x m-element array, where m is the number of resources and n is the number of processes
-each entry maxclaim[i][j] contains an integer that records the maximum number of units of resource j that process i may ever request.
+Max claims array: an n x m-element array, where m is the number of resources and n is the number of
+processes each entry maxclaim[i][j] contains an integer that records the maximum number of units of
+resource j that process i may ever request.
 
 allocation[i][j]     where i is the size of n, and j is the size of m
-Allocation array: an n x m-element array, where m is the number of resources and n is the number of processes
-each entry allocation[i][j] contains an integer that records the number of units of resource j that process i has actually been allocated.
+Allocation array: an n x m-element array, where m is the number of resources and n is the number of
+processes each entry allocation[i][j] contains an integer that records the number of units of
+resource j that process i has actually been allocated.
 
 need[i][j]     where i is the size of n, and j is the size of m
 Need array: an n x m array, where m is the number of resources and n is the number of processes
-each entry need[i][j] contains an integer that records the number of units of resource j that process i may need in the future.
+each entry need[i][j] contains an integer that records the number of units of resource j that
+process i may need in the future.
 */
 
 
@@ -108,7 +112,6 @@ void PrintResource() {
 	/* for loop: print number of total units and available units of each resource index */
 	return;
 }
-
 
 /***************************************************************/
 // this will be called at the end of option 1 (second)
@@ -145,14 +148,17 @@ void EnterParameters() {
     // vectors = resource + available
     // 2d arrays = max_claim, allocated, need
 	/* allocate memory for vectors and arrays: resource, available, max_claim, allocated, need */
-    vector = (type_vector*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(vector));        // trying to see if we can just use two of these
-    array = (type_vector*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+    // trying to see if we can just use two of these
+    vector = (type_vector*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(vector));
+    //array = (type_vector*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 
     // typedef struct vectorType type_vector;	// pcb = struct Node
     // vector --> *process = NULL;
     // tableType = typeVec
     /*
-    process = (table_typedef*)malloc(MAX_PROCS * sizeof(process)); // Memory is allocated for 'n' elements 
+
+    // Memory is allocated for 'n' elements 
+    process = (table_typedef*)malloc(MAX_PROCS * sizeof(process));
 	if (process == NULL) {
 		printf("\nNo memory is allocated.\n\n");
 		exit(0);
@@ -161,12 +167,14 @@ void EnterParameters() {
 
 
 	/* for each resource, prompt for number of units, set resource and available vectors indices*/
-	printf("\nEnter number of units for resources (r%d to r%d): ", r_min, r_max);   // r_min = starting index for resource vector, r_max = ending index for resource vector (r_size)
+	// r_min = starting index for resource vector, r_max = ending index for resource vector (r_size)
+	printf("\nEnter number of units for resources (r%d to r%d): ", r_min, r_max);
 	for (int i = 0; i < MAX_RESOURCES; i++) {
 		//scanf("%d", &);
 	}
 
-	/* for each process, for each resource, prompt for maximum number of units requested by process, update max_claim and need arrays */
+	/* for each process, for each resource, prompt for maximum number of units requested by process, update max_claim
+	and need arrays */
 
 	/* for each process, for each resource, prompt for number of resource units allocated to process */
 
