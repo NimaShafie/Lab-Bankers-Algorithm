@@ -249,12 +249,32 @@ void EnterParameters() {
 	}
 	printf("\n");
 
-	int nrows = MAX_PROCS;
-	int ncolumns = MAX_RESOURCES;
-	int i = 0;
-	int j = 0;
 	printf("\nTesting the 2D array here...\n");
 
+	int nrows = MAX_PROCS;
+	int ncolumns = MAX_RESOURCES;
+	int r = 3, c = 4, i, j, count;
+
+	int** arr = (int**)malloc(r * sizeof(int*));
+	for (i = 0; i < r; i++)
+		arr[i] = (int*)malloc(c * sizeof(int));
+
+	// Note that arr[i][j] is same as *(*(arr+i)+j) 
+	count = 0;
+	for (i = 0; i < r; i++) {
+		for (j = 0; j < c; j++) {
+			// here we're initalize the array...
+			arr[i][j] = ++count;  // OR *(*(arr+i)+j) = ++count
+		}
+	}
+
+
+	for (i = 0; i < r; i++) {
+		for (j = 0; j < c; j++) {
+			printf("%d ", arr[i][j]);
+		}
+		printf("\n");
+	}
 
 
 	/*
@@ -283,12 +303,6 @@ MAX_PROCS = 5		(rows) = 0 1 2 3 4
 MAX_RESOURCES = 3	(columns) = 0 1 2
 	*/
 
-	for (i = 0; i < nrows; i++) {	// rows here (procs)
-		printf("%d", )
-		for (j = 0; j < ncolumns; j++) {	// colums here (resources)
-
-		}
-	}
 
 	/* for each process, for each resource, prompt for maximum number of units requested by process
 	update max_claim and need arrays */
