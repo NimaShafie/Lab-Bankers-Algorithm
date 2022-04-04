@@ -159,6 +159,25 @@ void EnterParameters() {
 	availableVector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
 
 	max_claim = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	//max_claim = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	/*
+	    int (*p)[2] = malloc(3 * sizeof *p);
+    int i;
+    int j;
+
+        //All addresses printed here are contiguous
+    for(i=0; i<3; i++){
+        for(j=0; j<2; j++){
+            printf("%d\t", &p[i][j]);
+        }
+        printf("\n");
+    }
+	*/
+	/*
+	int **array1 = malloc(nrows * sizeof(int *));
+	for(i = 0; i < nrows; i++)
+		array1[i] = malloc(ncolumns * sizeof(int));
+	*/
 	allocation = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 	need = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 
@@ -230,6 +249,47 @@ void EnterParameters() {
 	}
 	printf("\n");
 
+	int nrows = MAX_PROCS;
+	int ncolumns = MAX_RESOURCES;
+	int i = 0;
+	int j = 0;
+	printf("\nTesting the 2D array here...\n");
+
+
+
+	/*
+	*     int (*p)[2] = malloc(3 * sizeof *p);
+    int i;
+    int j;
+
+        //All addresses printed here are contiguous
+    for(i=0; i<3; i++){
+        for(j=0; j<2; j++){
+            printf("%d\t", &p[i][j]);
+        }
+        printf("\n");
+    }
+
+	        Max claim 
+        r0      r1      r2 
+----------------------------
+p0      7       5       3 
+p1      3       2       2
+p2      9       0       2
+p3      2       2       2
+p4      4       3       3
+
+MAX_PROCS = 5		(rows) = 0 1 2 3 4
+MAX_RESOURCES = 3	(columns) = 0 1 2
+	*/
+
+	for (i = 0; i < nrows; i++) {	// rows here (procs)
+		printf("%d", )
+		for (j = 0; j < ncolumns; j++) {	// colums here (resources)
+
+		}
+	}
+
 	/* for each process, for each resource, prompt for maximum number of units requested by process
 	update max_claim and need arrays */
 	// use max_claims[i][j] and need[i][j] here.. not exactly sure what to do with need array
@@ -244,8 +304,8 @@ void EnterParameters() {
 				printf("\nEnter maximum number of units process p0 will request from each resource (r0 to r%d): ", MAX_RESOURCES);
 			}
 			// need to find out how to make a 2d array in C, prob use pointers or something
-			max_claims[i][j]
-			resourceVector[i].resource = r_temp;
+			//max_claim[i][j]
+			//resourceVector[i].resource = r_temp;
 		}
 	}
 	//max_claim[i][j]     where i = number of processes, and j = number of resources
