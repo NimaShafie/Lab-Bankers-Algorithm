@@ -13,15 +13,6 @@ Nima Shafie
 int MAX_PROCS;
 int MAX_RESOURCES = 1;
 
-/*
-typedef struct dynamic_array
-{
-	int* data;
-	int capacity; // total capacity
-	int size; // number of elements in vector
-} vector;
-*/
-
 struct vectorType {
 	int resource;
 	int available;
@@ -29,25 +20,9 @@ struct vectorType {
 typedef struct vectorType type_vector;
 
 struct arrayType {
-	int resource;
-	int process;
-} *array = NULL, *max_claim = NULL, *allocation = NULL, *need = NULL;
+    int value;
+} *array = NULL, **max_claim = NULL, *allocation = NULL, *need = NULL;
 typedef struct arrayType type_array;
-
-/*
-struct TableType {
-	int id;
-	int arrival;
-	int total_cpu;
-	int total_remaining;
-	bool done;
-	int start_time;
-	bool already_started;
-	int end_time;
-	int turnaround_time;
-} *process = NULL;
-typedef struct TableType table_typedef;	// pcb = struct Node
-/* 
 
 /*
 there will be two vectors:
@@ -107,12 +82,15 @@ process i may need in the future.
 void PrintResource() {
 	/* declare local variables */
 
-    printf("\nResource\t\tUnits\t\tAvailable\n");
-    printf("------------------------------------------------\n");
-
-	/* for loop: print each resource index */
-
-	/* for loop: print number of total units and available units of each resource index */
+    printf("\nResource\tUnits\t\tAvailable\n");
+    printf("---------------------------------------------\n");
+	/* for loop: print each resource index & number of total units and available units for each resource index */
+    for(int i = 0; i <= MAX_RESOURCES; i++) {
+        printf("r%d\t", i);
+        printf("\t%d\t\t%d", resourceVector[i].resource, resourceVector[i].available);
+        printf("\n");
+    }
+    printf("\n\n");
 	return;
 }
 
@@ -212,11 +190,15 @@ void EnterParameters() {
 		exit(0);
 	}
 
-	max_claim = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+    // testing max claim 2d array dynamic initialize here
+	max_claim = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+    for (int i = 0; i < MAX_PROCS; i++)
+		max_claim[i] = (int*)malloc(MAX_RESOURCES * sizeof(int));
 	if (array == NULL) {
 		printf("\nNo memory is allocated for array.\n\n");
 		exit(0);
 	}
+
 
 	allocation = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 	if (array == NULL) {
@@ -243,6 +225,7 @@ void EnterParameters() {
 	}
 
 	// debugging purposes
+    /*
 	printf("\nAccepted the following into resourceVector.resource: ");
 	for (int i = 0; i <= MAX_RESOURCES; i++) {
 		printf("%d ", resourceVector[i].resource);
@@ -250,9 +233,6 @@ void EnterParameters() {
 	printf("\n");
 
 	printf("\nTesting the 2D array here...\n");
-
-	int nrows = MAX_PROCS;
-	int ncolumns = MAX_RESOURCES;
 	int r = 3, c = 4, i, j, count;
 
 	int** arr = (int**)malloc(r * sizeof(int*));
@@ -268,7 +248,6 @@ void EnterParameters() {
 		}
 	}
 
-
 	for (i = 0; i < r; i++) {
 		for (j = 0; j < c; j++) {
 			printf("%d ", arr[i][j]);
@@ -276,6 +255,7 @@ void EnterParameters() {
 		printf("\n");
 	}
 
+    printf("\n");
 
 	/*
 	*     int (*p)[2] = malloc(3 * sizeof *p);
@@ -303,39 +283,43 @@ MAX_PROCS = 5		(rows) = 0 1 2 3 4
 MAX_RESOURCES = 3	(columns) = 0 1 2
 	*/
 
-
 	/* for each process, for each resource, prompt for maximum number of units requested by process
 	update max_claim and need arrays */
 	// use max_claims[i][j] and need[i][j] here.. not exactly sure what to do with need array
-	printf("\nEnter maximum number of units process p0 will request from each resource (r0 to r%d): ", MAX_RESOURCES);
-	for (int i = 0; i <= MAX_PROCS; i++) {
+	for (int proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
+        printf("\nEnter maximum number of units process p%d will request from each resource (r0 to r%d): ",
+        proc_count, MAX_RESOURCES);
 		// outter for loop [i] will iterate through all processes
-		for (int j = 0; j <= MAX_RESOURCES; j++) {
+		for (int resource_count = 0; resource_count <= MAX_RESOURCES; resource_count++) {
 			// inner for loop [j[ will iterate through all resources for each process
 			scanf("%d", &r_temp);
 			while (r_temp < 0) {
 				printf("\nUnits must be non-negative, please re-enter all unit values.\n");
 				printf("\nEnter maximum number of units process p0 will request from each resource (r0 to r%d): ", MAX_RESOURCES);
 			}
-			// need to find out how to make a 2d array in C, prob use pointers or something
-			//max_claim[i][j]
-			//resourceVector[i].resource = r_temp;
+            max_claim[proc_count][resource_count].value = r_temp;
+            //printf("Setting max_claim[%d][%d] = %d\n", proc_count, resource_count, r_temp);
 		}
+        printf("\n");
 	}
-	//max_claim[i][j]     where i = number of processes, and j = number of resources
-	//max_claim contains an integer that records the number of units of resource [j] that process [i] may ever request
-	//max_claim[number of processes][number of resources]
-	/*
-	array struct has these
-	int resource;
-	int process;
-	*/
+
+    printf("\nTesting the 2D array here...\n");
+    // test printing out what we're actually supposed to see here
+    // THIS WORKS!
+    for (int i = 0; i < MAX_PROCS; i++) {
+		for (int j = 0; j <= MAX_RESOURCES; j++) {
+			printf("%d ", max_claim[i][j].value);
+		}
+		printf("\n");
+	}
+    printf("\n");
 
 	/* for each process, for each resource, prompt for number of resource units allocated to process */
 	// same for loop setups as above, except we use allocation[i][j]
 
 	/* print resource vector, available vector, max_claim array, allocated array, need array */
 	// call PrintResource()
+    PrintResource();
 	// then call PrintMatrix()
 
 	return;
