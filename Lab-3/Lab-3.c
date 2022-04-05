@@ -82,15 +82,14 @@ process i may need in the future.
 void PrintResource() {
 	/* declare local variables */
 
-    printf("\nResource\tUnits\t\tAvailable\n");
-    printf("---------------------------------------------\n");
+    printf("\n\tUnits\tAvailable\n");
+    printf("---------------------------------\n");
 	/* for loop: print each resource index & number of total units and available units for each resource index */
     for(int i = 0; i <= MAX_RESOURCES; i++) {
-        printf("r%d\t", i);
-        printf("\t%d\t\t%d", resourceVector[i].resource, resourceVector[i].available);
+        printf("r%d", i);
+        printf("\t%d\t%d", resourceVector[i].resource, resourceVector[i].available);
         printf("\n");
     }
-    printf("\n\n");
 	return;
 }
 
@@ -98,24 +97,52 @@ void PrintResource() {
 // this will be called at the end of option 1 (second)
 void PrintMatrix() {
 	/* declare local variables */
+	// provides how many tab spaces we need between headers (Max Claim, Current, etc)
+	int header_tab_space = MAX_RESOURCES++;
+
 
     // need to include a number of \t's = resource count to format correctly ater Max Claim
-    printf("\n\tMax Claim\t\tCurrent\t\tPotential\n");
-    printf("Process\t\t");
+    //printf("\n\tMax Claim\t\t\tCurrent\t\t\t\tPotential\n");
+	printf("\n\tMax Claim");
+	for (int i = 0; i <= header_tab_space; i++) {
+		printf("\t");
+	}
+	printf("Current");
+	for (int i = 0; i <= header_tab_space; i++) {
+		printf("\t");
+	}
+	printf("\tPotential\n");
+
     // this prints out the resource indices, we always iterate over 3 times for..
     // max_claim        current     potential
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < MAX_RESOURCES; i++) {
         for(int resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
-            printf("r%d\t", resource_count);
+            printf("\tr%d", resource_count);
         }
-        printf("\t\t");
+		printf("\t");
     }
-    printf("-------------------------------------------------------------------------------------------------------\n");
+	// trying below with formatting programming
+	// 8 -'s for starting
+	// 22 -'s for two tabs
+	printf("\n--------");
+	for (int i = 0; i <= header_tab_space; i++) {
+		printf("--------------------------------");
+	}
+	printf("\n");
+    //printf("\n------------------------------------------------------------------------------\n");
 	/* for loop: print each process index & number of total units and available units for each resource index */
     for (int i = 0; i < MAX_PROCS; i++) {
-        printf("p%d\t", i);
-		for (int j = 0; j <= MAX_RESOURCES; j++) {
-			printf("%d ", max_claim[i][j].value);
+        printf("p%d", i);
+		for (int j = 0; j < MAX_RESOURCES; j++) {
+			printf("\t%d ", max_claim[i][j].value);
+		}
+		printf("\t");
+		for (int k = 0; k < MAX_RESOURCES; k++) {
+			printf("\t%d ", allocation[i][k].value);
+		}
+		printf("\t");
+		for (int m = 0; m < MAX_RESOURCES; m++) {
+			printf("\t%d ", need[i][m].value);
 		}
 		printf("\n");
 	}
@@ -125,7 +152,7 @@ void PrintMatrix() {
 	/* for each process: */
 		/* for each resource: */
 			/* print maximum number of units each process may request, is allocated, and needs from each resource */
-
+	printf("\n");
 	return;
 }
 
@@ -158,9 +185,9 @@ void EnterParameters() {
 	resourceVector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
 	availableVector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
 
-	max_claim = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-	allocation = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-	need = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	max_claim = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	allocation = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	need = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 
     // typedef struct vectorType type_vector;	// pcb = struct Node
     // vector --> *process = NULL;
@@ -220,7 +247,7 @@ void EnterParameters() {
 
 	/* for each resource, prompt for number of units, set resource and available vectors indices*/
 	// r_min = starting index for resource vector, r_max = ending index for resource vector (r_size)
-	printf("\nEnter number of units for resources (r0 to r%d): ", MAX_RESOURCES);
+	printf("Enter number of units for resources (r0 to r%d): ", MAX_RESOURCES);
 	for (int i = 0; i <= MAX_RESOURCES; i++) {
 		scanf("%d", &r_temp);
 		while (r_temp <= 0) {
@@ -293,7 +320,7 @@ MAX_RESOURCES = 3	(columns) = 0 1 2
 	update max_claim and need arrays */
 	// use max_claims[i][j] and need[i][j] here.. not exactly sure what to do with need array
 	for (int proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-        printf("\nEnter maximum number of units process p%d will request from each resource (r0 to r%d): ",
+        printf("Enter maximum number of units process p%d will request from each resource (r0 to r%d): ",
         proc_count, MAX_RESOURCES);
 		// outter for loop [i] will iterate through all processes
 		for (int resource_count = 0; resource_count <= MAX_RESOURCES; resource_count++) {
@@ -306,7 +333,6 @@ MAX_RESOURCES = 3	(columns) = 0 1 2
             max_claim[proc_count][resource_count].value = r_temp;
             //printf("Setting max_claim[%d][%d] = %d\n", proc_count, resource_count, r_temp);
 		}
-        printf("\n");
 	}
 
     /*
@@ -328,42 +354,31 @@ MAX_RESOURCES = 3	(columns) = 0 1 2
     // printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d", resource_count,process_count);
     int resource_count = 0;
 	for (int proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-       printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d",
-       resource_count, proc_count);
+       printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d: ",
+		MAX_RESOURCES, proc_count);
 		// outter for loop [proc_count] will iterate through all processes
 		for (; resource_count <= MAX_RESOURCES; resource_count++) {
-			// inner for loop [j[ will iterate through all resources for each process
+			// inner for loop [resource_count] will iterate through all resources for each process
 			scanf("%d", &r_temp);
 			while (r_temp < 0) {
 				printf("\nUnits must be non-negative, please re-enter all unit values.\n");
-                printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d",
-                resource_count, proc_count);
+				printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d: ",
+				MAX_RESOURCES, proc_count);
 			}
             allocation[proc_count][resource_count].value = r_temp;
             //printf("Setting max_claim[%d][%d] = %d\n", proc_count, resource_count, r_temp);
 		}
-        printf("\n");
+		resource_count = 0;
 	}
 
-    /*
+	// need array initalization
 	for (int proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-        printf("\nEnter maximum number of units process p%d will request from each resource (r0 to r%d): ",
-        proc_count, MAX_RESOURCES);
-		// outter for loop [i] will iterate through all processes
-		for (int resource_count = 0; resource_count <= MAX_RESOURCES; resource_count++) {
-			// inner for loop [j[ will iterate through all resources for each process
-			scanf("%d", &r_temp);
-			while (r_temp < 0) {
-				printf("\nUnits must be non-negative, please re-enter all unit values.\n");
-				printf("\nEnter maximum number of units process p0 will request from each resource (r0 to r%d): ", MAX_RESOURCES);
-			}
-            max_claim[proc_count][resource_count].value = r_temp;
-            //printf("Setting max_claim[%d][%d] = %d\n", proc_count, resource_count, r_temp);
+		for (; resource_count <= MAX_RESOURCES; resource_count++) {
+			need[proc_count][resource_count].value =
+				max_claim[proc_count][resource_count].value - allocation[proc_count][resource_count].value;
 		}
-        printf("\n");
+		resource_count = 0;
 	}
-
-    */
 
 	/* print resource vector, available vector, max_claim array, allocated array, need array */
 	// call PrintResource()
