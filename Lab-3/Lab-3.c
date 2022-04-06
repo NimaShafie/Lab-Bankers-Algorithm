@@ -242,11 +242,18 @@ void EnterParameters() {
 	printf("Enter number of units for resources (r0 to r%d): ", MAX_RESOURCES);
 	for (int i = 0; i <= MAX_RESOURCES; i++) {
 		scanf("%d", &r_temp);
+        // this was giving some buffer problems here, so disabling it
+        // now allowing number of units to = 0
+        /*
 		while (r_temp <= 0) {
 			printf("\nUnits must be greater than 0, please re-enter all resource values.\n");
 			printf("\nEnter number of units for resources (r0 to r%d): ", MAX_RESOURCES);
+            i = 0;
 			scanf("%d", &r_temp);
+            // this is breaking out of the while loop after one entry, when we need to enter all values again
+            // need to only break out of this while loop when entering equal number of resources
 		}
+        */
 		resourceVector[i].resource = r_temp;
 	}
 
@@ -330,6 +337,7 @@ void BankerAlgo() {
 	int num_sequenced_count = 0;
 	int proc_count = 0;
 	int resource_count = 0;
+    int maxTests = 0;
 	bool unsafe_process = false;
 	bool* seqVec = (bool*)malloc(MAX_PROCS * sizeof(bool));
 	if (seqVec == NULL) {
@@ -341,33 +349,48 @@ void BankerAlgo() {
 	}
 
 	/* while not all processed are sequenced */
-	while (num_sequenced_count <= MAX_PROCS) {
+	while (num_sequenced_count <= MAX_PROCS || (maxTests == MAX_PROCS * MAX_PROCS)) {
 		for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
 			printf("Checking:");
 			/* if process has not been safely sequenced yet */
-			printf(" < ");
+			printf(" <");
 			//printf(" < %d %d %d >\t<=\t< %d %d %d > :",
 			if (!seqVec[proc_count]) {
 				// for each resource
-				for (resource_count = 0; (resource_count <= MAX_RESOURCES) && (unsafe_process); resource_count++) {
+				for (resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
 					/* check for safe sequencing by comparing process' need vector to available vector */
+                    printf(" %d", need[proc_count][resource_count].value);
+
 					// entering this if statement means too many resources are being requested
-					printf(" %d", need[proc_count][resource_count].value);
 					if (need[proc_count][resource_count].value > availableVector[resource_count].available) {
-						unsafe_process = true; }
+						unsafe_process = true;
+                        printf("()");
+                        }
+                    else {
+                        printf(" ");
+                    }
 				}
-				// means all resources needed are available
-				if (!unsafe_process) {
-					printf("\nUnsafe process reached!\n");
-				}
-				// this needs to be reset
-				unsafe_process = false;
+            }
+        }
+
+                printf("> <= ");
+
+		for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
+			/* if process has not been safely sequenced yet */
+			printf(" <");
+			//printf(" < %d %d %d >\t<=\t< %d %d %d > :",
+			if (!seqVec[proc_count]) {
+				// for each resource
+				for (resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
+					/* check for safe sequencing by comparing process' need vector to available vector */
+                    printf(" %d", availableVector[resource_count].available);
+                    // we need to alter the available vector to present its new value afterwards
+                }
 			}
 		}
-	}
-
-
-
+        printf("\nOne iteration complete\n");
+        scanf( "%d" , maxTests);
+    }
 
 	/* while not all processed are sequenced */
 		/* for each process */
