@@ -2,6 +2,7 @@
 Lab 3 - Banker's Algorithm
 Comp 322/L
 Nima Shafie
+4/8/2022
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -16,12 +17,12 @@ int MAX_RESOURCES = 1;
 struct vectorType {
 	int resource;
 	int available;
-} *vector = NULL, *resourceVector = NULL, *availableVector = NULL;
+} *vector = NULL, * resourceVector = NULL, * availableVector = NULL;
 typedef struct vectorType type_vector;
 
 struct arrayType {
-    int value;
-} *array = NULL, **max_claim = NULL, **allocation = NULL, **need = NULL;
+	int value;
+} *array = NULL, ** max_claim = NULL, ** allocation = NULL, ** need = NULL;
 typedef struct arrayType type_array;
 
 /*
@@ -34,25 +35,6 @@ resource[j] records the total number of units of resource j.
 available[j]     where j is the size of m
 Available vector: an m-element vector, where m is the number of resources and each entry
 available[j] records the number of units of resource j that are available.
-
-n x m meaning, n by m, which equals n * m total elements,   rows x columns
-so if n = 3, m = 1,     3 x 1 ==
-x
-x
-x
-3 total elements
-
-if (a=2) x (b=4)
-a b b b
-a b b b
-8 total elements
-
-n m m m
-n m m m
-2 x 4 array (or n = 2, m = 4)
-in the following, to access the j'th element, we use maxClaim[i = 1][j = 1]
-n m m m
-n j m m
 
 all arrays will be 2d arrays, array[i][j]
 or: array[number of processes][number of resources]
@@ -82,14 +64,14 @@ process i may need in the future.
 void PrintResource() {
 	/* declare local variables */
 
-    printf("\n\tUnits\tAvailable\n");
-    printf("-----------------------------\n");
+	printf("\n\tUnits\tAvailable\n");
+	printf("-----------------------------\n");
 	/* for loop: print each resource index & number of total units and available units for each resource index */
-    for(int i = 0; i <= MAX_RESOURCES; i++) {
-        printf("r%d", i);
-        printf("\t%d\t%d", resourceVector[i].resource, availableVector[i].available);
-        printf("\n");
-    }
+	for (int i = 0; i <= MAX_RESOURCES; i++) {
+		printf("r%d", i);
+		printf("\t%d\t%d", resourceVector[i].resource, availableVector[i].available);
+		printf("\n");
+	}
 	return;
 }
 
@@ -101,8 +83,8 @@ void PrintMatrix() {
 	int header_tab_space = MAX_RESOURCES++;
 
 
-    // need to include a number of \t's = resource count to format correctly ater Max Claim
-    //printf("\n\tMax Claim\t\t\tCurrent\t\t\t\tPotential\n");
+	// need to include a number of \t's = resource count to format correctly ater Max Claim
+	//printf("\n\tMax Claim\t\t\tCurrent\t\t\t\tPotential\n");
 	printf("\n\tMax Claim");
 	for (int i = 0; i <= header_tab_space; i++) {
 		printf("\t");
@@ -113,22 +95,22 @@ void PrintMatrix() {
 	}
 	printf("\tPotential\n");
 
-    // this prints out the resource indices, we always iterate over 3 times for..
-    // max_claim        current     potential
-    for(int i = 0; i < 3; i++) {
-        for(int resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
-            printf("\tr%d", resource_count);
-        }
+	// this prints out the resource indices, we always iterate over 3 times for..
+	// max_claim        current     potential
+	for (int i = 0; i < 3; i++) {
+		for (int resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
+			printf("\tr%d", resource_count);
+		}
 		printf("\t");
-    }
+	}
 	printf("\n--------");
 	for (int i = 0; i <= header_tab_space; i++) {
 		printf("------------------------------");
 	}
 	printf("\n");
 	/* for loop: print each process index & number of total units and available units for each resource index */
-    for (int i = 0; i < MAX_PROCS; i++) {
-        printf("p%d", i);
+	for (int i = 0; i < MAX_PROCS; i++) {
+		printf("p%d", i);
 		for (int j = 0; j < MAX_RESOURCES; j++) {
 			printf("\t%d ", max_claim[i][j].value);
 		}
@@ -142,7 +124,7 @@ void PrintMatrix() {
 		}
 		printf("\n");
 	}
-    printf("\n\n");
+	printf("\n\n");
 	return;
 }
 
@@ -173,126 +155,70 @@ void EnterParameters() {
 		printf("\nNo memory is allocated for array.\n\n");
 		exit(0);
 	}
-	for (int i = 0; i <= MAX_RESOURCES; i++) {
+	for (int i = 0; i <= MAX_RESOURCES; i++)
 		proc_summation_of_resources[i] = 0;
-	}
 
 	/* allocate memory for vectors and arrays: resource, available, max_claim, allocated, need */
-    vector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
+	vector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
 	array = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-
 	resourceVector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
 	availableVector = (type_vector*)malloc(MAX_RESOURCES * sizeof(vector));
-
 	max_claim = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 	allocation = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 	need = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
 
-    // Memory is allocated for 'n' elements 
-    vector = (type_vector*)malloc((MAX_RESOURCES) * sizeof(vector));
-	if (vector == NULL) {
-		printf("\nNo memory is allocated for vector.\n\n");
-		exit(0);
-	}
-
-	array = (type_array*)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-	if (array == NULL) {
-		printf("\nNo memory is allocated for array.\n\n");
-		exit(0);
-	}
-
+	// Memory is allocated for 'n' elements 
 	resourceVector = (type_vector*)malloc((MAX_RESOURCES) * sizeof(vector));
-	if (vector == NULL) {
-		printf("\nNo memory is allocated for vector.\n\n");
-		exit(0);
-	}
-
 	availableVector = (type_vector*)malloc((MAX_RESOURCES) * sizeof(vector));
-	if (vector == NULL) {
+	if (vector == NULL || resourceVector == NULL || availableVector == NULL) {
 		printf("\nNo memory is allocated for vector.\n\n");
 		exit(0);
 	}
 
 	max_claim = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-    for (int i = 0; i < MAX_PROCS; i++)
-		max_claim[i] = (int*)malloc(MAX_RESOURCES * sizeof(int));
-	if (max_claim == NULL) {
-		printf("\nNo memory is allocated for array.\n\n");
-		exit(0);
+	allocation = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	need = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
+	for (int i = 0; i < MAX_PROCS; i++) {
+		max_claim[i] = (type_array*)malloc(MAX_RESOURCES * sizeof(array));
+		allocation[i] = (type_array*)malloc(MAX_RESOURCES * sizeof(array));
+		need[i] = (type_array*)malloc(MAX_RESOURCES * sizeof(array));
 	}
-
-    allocation = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-    for (int i = 0; i < MAX_PROCS; i++)
-		allocation[i] = (int*)malloc(MAX_RESOURCES * sizeof(int));
-	if (allocation == NULL) {
-		printf("\nNo memory is allocated for array.\n\n");
-		exit(0);
-	}
-
-    need = (type_array**)malloc((MAX_PROCS * MAX_RESOURCES) * sizeof(array));
-    for (int i = 0; i < MAX_PROCS; i++)
-		need[i] = (int*)malloc(MAX_RESOURCES * sizeof(int));
-	if (need == NULL) {
+	if (max_claim == NULL || allocation == NULL || need == NULL) {
 		printf("\nNo memory is allocated for array.\n\n");
 		exit(0);
 	}
 
 	/* for each resource, prompt for number of units, set resource and available vectors indices*/
-	// r_min = starting index for resource vector, r_max = ending index for resource vector (r_size)
 	printf("Enter number of units for resources (r0 to r%d): ", MAX_RESOURCES);
 	for (int i = 0; i <= MAX_RESOURCES; i++) {
 		scanf("%d", &r_temp);
-        // this was giving some buffer problems here, so disabling it
-        // now allowing number of units to = 0
-        /*
-		while (r_temp <= 0) {
-			printf("\nUnits must be greater than 0, please re-enter all resource values.\n");
-			printf("\nEnter number of units for resources (r0 to r%d): ", MAX_RESOURCES);
-            i = 0;
-			scanf("%d", &r_temp);
-            // this is breaking out of the while loop after one entry, when we need to enter all values again
-            // need to only break out of this while loop when entering equal number of resources
-		}
-        */
 		resourceVector[i].resource = r_temp;
 	}
 
 	/* for each process, for each resource, prompt for maximum number of units requested by process
 	update max_claim and need arrays */
-	// use max_claims[i][j] and need[i][j] here.. not exactly sure what to do with need array
 	for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-        printf("Enter maximum number of units process p%d will request from each resource (r0 to r%d): ",
-        proc_count, MAX_RESOURCES);
+		printf("Enter maximum number of units process p%d will request from each resource (r0 to r%d): ",
+			proc_count, MAX_RESOURCES);
 		// outter for loop [i] will iterate through all processes
 		for (resource_count = 0; resource_count <= MAX_RESOURCES; resource_count++) {
 			// inner for loop [j[ will iterate through all resources for each process
 			scanf("%d", &r_temp);
-			while (r_temp < 0) {
-				printf("\nUnits must be non-negative, please re-enter all unit values.\n");
-				printf("\nEnter maximum number of units process p0 will request from each resource (r0 to r%d): ",
-					MAX_RESOURCES);
-				scanf("%d", &r_temp);
-			}
-            max_claim[proc_count][resource_count].value = r_temp;
+			max_claim[proc_count][resource_count].value = r_temp;
 		}
 	}
 
 	/* for each process, for each resource, prompt for number of resource units allocated to process */
 	// same for loop setups as above, except we use allocation[i][j]
-    // printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d", resource_count,process_count);
+	// printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d", resource_count,process_count);
 	for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-       printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d: ",
-		MAX_RESOURCES, proc_count);
+		printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d: ",
+			MAX_RESOURCES, proc_count);
 		// outter for loop [proc_count] will iterate through all processes
 		for (resource_count = 0; resource_count <= MAX_RESOURCES; resource_count++) {
 			// inner for loop [resource_count] will iterate through all resources for each process
 			scanf("%d", &r_temp);
-			while (r_temp < 0) {
-				printf("\nUnits must be non-negative, please re-enter all unit values.\n");
-				printf("Enter number of units of each resource (r0 to r%d) allocated to process p%d: ",
-				MAX_RESOURCES, proc_count);
-			}
-            allocation[proc_count][resource_count].value = r_temp;
+			allocation[proc_count][resource_count].value = r_temp;
 		}
 	}
 
@@ -302,8 +228,14 @@ void EnterParameters() {
 			// proc_summation_of_resources[proc_count] will hold the summation of all processes of a resource
 			proc_summation_of_resources[resource_count] += allocation[proc_count][resource_count].value;
 		}
-		availableVector[resource_count].available =
-			resourceVector[resource_count].resource - proc_summation_of_resources[resource_count];
+		// ensures a non-negative available number
+		if ((resourceVector[resource_count].resource - proc_summation_of_resources[resource_count]) >= 0) {
+			availableVector[resource_count].available =
+				resourceVector[resource_count].resource - proc_summation_of_resources[resource_count];
+		}
+		else {
+			availableVector[resource_count].available = 0;
+		}
 	}
 
 	// need array initalization
@@ -315,9 +247,8 @@ void EnterParameters() {
 	}
 
 	/* print resource vector, available vector, max_claim array, allocated array, need array */
-    PrintResource();
-    PrintMatrix();
-
+	PrintResource();
+	PrintMatrix();
 	return;
 }
 
@@ -337,72 +268,73 @@ void BankerAlgo() {
 	int num_sequenced_count = 0;
 	int proc_count = 0;
 	int resource_count = 0;
-    int maxTests = 0;
+	int max_tests = MAX_PROCS;
 	bool unsafe_process = false;
-	bool* seqVec = (bool*)malloc(MAX_PROCS * sizeof(bool));
-	if (seqVec == NULL) {
+	bool* safeVec = (bool*)malloc(MAX_PROCS * sizeof(bool));
+	int* seqVec = (int*)malloc(MAX_PROCS * sizeof(int));
+	if (safeVec == NULL || seqVec == NULL) {
 		printf("\nNo memory is allocated for vector.\n\n");
 		exit(0);
 	}
 	for (int i = 0; i < MAX_PROCS; i++) {
-		seqVec[i] = false;
+		safeVec[i] = false;
+		seqVec[i] = -1;
 	}
 
+
+	// when maxTests == MAX_PROCS + 1
+	// then we found no changes, and we're in a deadlock, end and output to user
+
 	/* while not all processed are sequenced */
-	while (num_sequenced_count <= MAX_PROCS || (maxTests == MAX_PROCS * MAX_PROCS)) {
+	while (num_sequenced_count < MAX_PROCS) {
 		for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-			printf("Checking:");
-			/* if process has not been safely sequenced yet */
-			printf(" <");
-			//printf(" < %d %d %d >\t<=\t< %d %d %d > :",
-			if (!seqVec[proc_count]) {
-				// for each resource
+			if (!safeVec[proc_count]) {
+				printf("Checking:");
+				/* if process has not been safely sequenced yet */
+				printf(" <");
+					// for each resource
 				for (resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
 					/* check for safe sequencing by comparing process' need vector to available vector */
-                    printf(" %d", need[proc_count][resource_count].value);
-
+					printf(" %d", need[proc_count][resource_count].value);
 					// entering this if statement means too many resources are being requested
 					if (need[proc_count][resource_count].value > availableVector[resource_count].available) {
 						unsafe_process = true;
-                        printf("()");
-                        }
-                    else {
-                        printf(" ");
-                    }
+					}
 				}
-            }
-        }
-
-                printf("> <= ");
-
-		for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
-			/* if process has not been safely sequenced yet */
-			printf(" <");
-			//printf(" < %d %d %d >\t<=\t< %d %d %d > :",
-			if (!seqVec[proc_count]) {
-				// for each resource
+				printf(" > <= <");
 				for (resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
-					/* check for safe sequencing by comparing process' need vector to available vector */
-                    printf(" %d", availableVector[resource_count].available);
-                    // we need to alter the available vector to present its new value afterwards
-                }
+					printf(" %d", availableVector[resource_count].available);
+				}
+				printf(" > :");
+				if (unsafe_process) {
+					printf("p%d could not be sequenced\n", proc_count);
+					max_tests--;
+				}
+				else {
+					printf("p%d safely sequenced\n", proc_count);
+					safeVec[proc_count] = true;
+					seqVec[num_sequenced_count] = proc_count;
+					max_tests = (MAX_PROCS - 1);
+
+					for (resource_count = 0; resource_count < MAX_RESOURCES; resource_count++) {
+						availableVector[resource_count].available += allocation[proc_count][resource_count].value;
+					}
+					num_sequenced_count++;
+				}
+			}
+			unsafe_process = false;
+			if (max_tests == 0) {
+				printf("\nSystem has an unsafe state. Deadlock reached.\n");
+				return;
 			}
 		}
-        printf("\nOne iteration complete\n");
-        scanf( "%d" , maxTests);
-    }
-
-	/* while not all processed are sequenced */
-		/* for each process */
-			/* if process has not been safely sequenced yet */
-				/* for each resource */
-				/* check for safe sequencing by comparing process' need vector to available vector */
-				/* if each resource is available */
-				/* print message that process had been safely sequenced */
-				/* update number of available units of resource */
-				/* for each resource */
-					/* free all resources allocated to process */
-					/* increment number of sequenced processes */
+	}
+	// we only arrive here if a safe state has been reached, inform user now
+	printf("\nSafe Sequence = ");
+	for (proc_count = 0; proc_count < MAX_PROCS; proc_count++) {
+		if ((proc_count + 1) == MAX_PROCS) printf("P%d\n\n", seqVec[proc_count]);
+		else printf("P%d, ", seqVec[proc_count]);
+	}
 	return;
 }
 
@@ -412,8 +344,35 @@ void BankerAlgo() {
 /********************************************************************/
 void FreeMemoryQuitProgram() {
 	/* check if vectors/array are not NULL--if so, free each vector/array */
-	//if (process != NULL) printf("\nDestroying remaining processes\n");
-	//free(process);
+	if (vector != NULL) {
+		free(vector);
+		vector = NULL;
+	}
+	if (array != NULL) {
+		free(array);
+		array = NULL;
+	}
+	if (resourceVector != NULL) {
+		free(resourceVector);
+		resourceVector = NULL;
+	}
+	if (availableVector != NULL) {
+		free(availableVector);
+		availableVector = NULL;
+	}
+	if (max_claim != NULL) {
+		free(max_claim);
+		max_claim = NULL;
+	}
+	if (allocation != NULL) {
+		free(allocation);
+		allocation = NULL;
+	}
+	if (need != NULL) {
+		free(need);
+		need = NULL;
+	}
+	printf("\nMemory has been freed\n");
 	return;
 }
 
@@ -452,30 +411,3 @@ int main() {
 	printf("\nThank you for using the Banker's Algorithm program, have a good day!\n");
 	return 1; /* indicates success */
 }
-
-// backup of 2D arrays
-/*
-// this is going to be replaced by PrintMatrix() only here for debugging & backup purposes
-printf("\nTesting the 2D array here...\n");
-// test printing out what we're actually supposed to see here
-// THIS WORKS!
-for (int i = 0; i < MAX_PROCS; i++) {
-	for (int j = 0; j <= MAX_RESOURCES; j++) {
-		printf("%d ", max_claim[i][j].value);
-	}
-	printf("\n");
-}
-printf("\n");
-
-			Max claim
-		r0      r1      r2
-----------------------------
-p0      7       5       3
-p1      3       2       2
-p2      9       0       2
-p3      2       2       2
-p4      4       3       3
-
-MAX_PROCS = 5		(rows) = 0 1 2 3 4
-MAX_RESOURCES = 3	(columns) = 0 1 2
-*/
